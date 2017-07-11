@@ -1,5 +1,8 @@
+
 # Google Images Download
 Python Script for 'searching' and 'downloading' hundreds of Google images/image links!
+#### Forked from hardikvasa/google-images-download
+#### I just made minor changes.
 
 ## Summary
 This is a Python program to search keywords/key-phrases on Google Images and then also optionally download all Images. 
