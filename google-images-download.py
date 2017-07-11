@@ -1,28 +1,22 @@
-
-# coding: utf-8
-
-# In[ ]:
-
 #Searching and Downloading Google Images/Image Links
 
 #Import Libraries
 
-#coding: UTF-8
 
 import time       #Importing the time library to check the time of code execution
 import sys    #Importing the System Library
 import os
 import urllib2
-
+import uuid
 
 ########### Edit From Here ###########
 
 #This list is used to search keywords. You can edit this list to search for google images of your choice. You can simply add and remove elements of the list.
-search_keyword = ['Australia']
-
+search_keyword = ['BMW X5']
+search_keyword[0] = raw_input("Enter Keyword: ")
 #This list is used to further add suffix to your search term. Each element of the list will help you download 100 images. First element is blank which denotes that no suffix is added to the search keyword of the above list. You can edit the list by adding/deleting elements from it.So if the first element of the search_keyword is 'Australia' and the second element of keywords is 'high resolution', then it will search for 'Australia High Resolution'
-keywords = [' high resolution']
-
+# keywords = [' high resolution']
+keywords = ['']
 ########### End of Editing ###########
 
 
@@ -84,10 +78,26 @@ def _images_get_all_items(page):
             page = page[end_content:]
     return items
 
+def _check_file_type(item):
+    if item.endswith("jpg"):
+        return "jpg"
+    elif item.endswith("png"):
+        return "png"
+    elif item.endswith("jpeg"):
+        return "jpeg"
+    elif item.endswith("JPG"):
+        return "JPG"
+    elif item.endswith("JPEG"):
+        return "JPEG"
+    elif item.endswith("PNG"):
+        return "PNG"
+    else:
+        raise ValueError('File type is not in [jpg,png,jpeg]')
+
 
 ############## Main Program ############
 t0 = time.time()   #start the timer
-
+prename = uuid.uuid4().hex
 #Download Image Links
 i= 0
 while i<len(search_keyword):
@@ -140,9 +150,11 @@ while i<len(search_keyword):
         from urllib2 import URLError, HTTPError
 
         try:
+            # print(items[k])
+            # print _check_file_type(items[k])
             req = Request(items[k], headers={"User-Agent": "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"})
             response = urlopen(req,None,15)
-            output_file = open(search_keywords+"/"+str(k+1)+".jpg",'wb')
+            output_file = open(search_keywords+"/"+prename+str(k+1)+"."+_check_file_type(items[k]),'wb')
             
             data = response.read()
             output_file.write(data)
@@ -168,7 +180,11 @@ while i<len(search_keyword):
             errorCount+=1
             print("URLError "+str(k))
             k=k+1;
+        except ValueError as e:
 
+            errorCount+=1
+            print("File type isn't known: " + str(k))
+            k=k+1
     i = i+1
 
 print("\n")
@@ -179,6 +195,3 @@ print("\n"+str(errorCount)+" ----> total Errors")
 
 
 # In[ ]:
-
-
-
